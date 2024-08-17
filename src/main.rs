@@ -30,9 +30,9 @@ async fn main() {
     // In development, we use the Hyper server
     #[cfg(debug_assertions)]
     {
-        log::info!("listening on http://{}", &addr);
-        axum::Server::bind(&addr)
-            .serve(app.into_make_service())
+        logging::log!("listening on http://{}", &addr);
+        let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+        axum::serve(listener, app.into_make_service())
             .await
             .unwrap();
     }
